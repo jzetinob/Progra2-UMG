@@ -15,9 +15,11 @@ import javax.swing.table.DefaultTableModel;
 public class FrmDetalleFactura extends javax.swing.JFrame {
 
     DefaultTableModel modeloTabla;
+    Factura facturaActual;
 
     public FrmDetalleFactura(Factura factura) {
         initComponents();
+        facturaActual = factura;
         configurarTabla();
         cargarFactura(factura);
         setLocationRelativeTo(null);
@@ -62,6 +64,7 @@ public class FrmDetalleFactura extends javax.swing.JFrame {
         jTableDetalle = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
+        btnImprimir = new javax.swing.JButton();
         btnCerrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -97,6 +100,13 @@ public class FrmDetalleFactura extends javax.swing.JFrame {
 
         lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 14));
         lblTotal.setText("0.00");
+
+        btnImprimir.setText("Imprimir");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
 
         btnCerrar.setText("Cerrar");
         btnCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -135,6 +145,8 @@ public class FrmDetalleFactura extends javax.swing.JFrame {
                         .addComponent(lblTotal))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnImprimir)
+                        .addGap(18, 18, 18)
                         .addComponent(btnCerrar)))
                 .addContainerGap())
         );
@@ -158,7 +170,9 @@ public class FrmDetalleFactura extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCerrar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnImprimir)
+                    .addComponent(btnCerrar))
                 .addContainerGap())
         );
 
@@ -169,8 +183,13 @@ public class FrmDetalleFactura extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnCerrarActionPerformed
 
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        new FrmVistaPreviaFactura(this, facturaActual).setVisible(true);
+    }//GEN-LAST:event_btnImprimirActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

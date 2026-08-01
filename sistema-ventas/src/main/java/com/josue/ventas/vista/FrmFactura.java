@@ -197,6 +197,14 @@ public class FrmFactura extends javax.swing.JFrame {
         lblTotal.setText("0.00");
     }
 
+    private void imprimirFactura() {
+        if (facturaActual.getDetalles().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay productos en la factura para imprimir.");
+            return;
+        }
+        new FrmVistaPreviaFactura(this, facturaActual).setVisible(true);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -224,6 +232,7 @@ public class FrmFactura extends javax.swing.JFrame {
         jTableProductos = new javax.swing.JTable();
         btnEliminar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
 
@@ -372,6 +381,13 @@ public class FrmFactura extends javax.swing.JFrame {
             }
         });
 
+        btnImprimir.setText("Imprimir");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+
         jLabel8.setText("Total:");
 
         lblTotal.setText("0.00");
@@ -389,6 +405,8 @@ public class FrmFactura extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnImprimir)
+                        .addGap(18, 18, 18)
                         .addComponent(btnEliminar)
                         .addGap(18, 18, 18)
                         .addComponent(btnGuardar))
@@ -409,6 +427,7 @@ public class FrmFactura extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnImprimir)
                     .addComponent(btnEliminar)
                     .addComponent(btnGuardar))
                 .addGap(18, 18, 18)
@@ -433,6 +452,10 @@ public class FrmFactura extends javax.swing.JFrame {
         guardarFactura();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        imprimirFactura();
+    }//GEN-LAST:event_btnImprimirActionPerformed
+
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -452,6 +475,7 @@ public class FrmFactura extends javax.swing.JFrame {
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JComboBox<String> cmbCliente;
     private javax.swing.JComboBox<String> cmbProducto;
     private javax.swing.JLabel jLabel1;
