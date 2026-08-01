@@ -59,6 +59,7 @@ Documentación detallada en [`docs/`](docs/).
 
 ## Documentación
 
+- [`docs/mini-tutorial.md`](docs/mini-tutorial.md) — tutorial paso a paso de cómo usar la app.
 - [`docs/PLAN.md`](docs/PLAN.md) — plan de desarrollo (decisiones y fases).
 - [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) — arquitectura detallada.
 - Los `.md` futuros se agregan en `docs/`.
