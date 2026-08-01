@@ -5,7 +5,7 @@
 package com.josue.ventas.controlador;
 
 import com.josue.ventas.dao.FacturaDAO;
-import com.josue.ventas.dao.;
+import com.josue.ventas.dao.FacturaDAOCsv;
 import com.josue.ventas.modelo.Factura;
 import java.util.List;
 
@@ -15,10 +15,10 @@ import java.util.List;
  */
 public class FacturaController {
 
-     dao;
+    FacturaDAO dao;
 
     public FacturaController() {
-        dao = .getInstancia();
+        dao = FacturaDAOCsv.getInstancia();
     }
 
     public void Guardar(Factura factura) {
@@ -35,5 +35,9 @@ public class FacturaController {
 
     public void EliminarConDetalles(int id) {
         dao.eliminarConDetalles(id);
+    }
+
+    public String obtenerSiguienteNumeroFactura() {
+        return dao.obtenerSiguienteNumeroFactura();
     }
 }

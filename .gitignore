@@ -1,10 +1,6 @@
 target/
-
 *.class
-nbproject/private/
-.nb-gradle/
-==
 nbproject/private/
 build/
-*.class
-
+.nb-gradle/
+datos/

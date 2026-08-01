@@ -20,4 +20,8 @@ public interface FacturaDAO {
     void actualizar(Factura factura);
 
     void eliminar(int id);
+
+    void eliminarConDetalles(int id);
+
+    String obtenerSiguienteNumeroFactura();
 }

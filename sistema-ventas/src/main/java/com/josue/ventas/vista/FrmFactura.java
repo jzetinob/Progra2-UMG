@@ -32,6 +32,7 @@ public class FrmFactura extends javax.swing.JFrame {
         facturaActual = new Factura();
         configurarTabla();
         fechaActual();
+        txtNumFactura.setText(controller.obtenerSiguienteNumeroFactura());
     }
 
     private void configurarTabla() {
@@ -133,7 +134,7 @@ public class FrmFactura extends javax.swing.JFrame {
     public void limpiarFormulario() {
         txtCliente.setText("");
         txtNit.setText("");
-        txtNumFactura.setText("");
+        txtNumFactura.setText(controller.obtenerSiguienteNumeroFactura());
         fechaActual();
         facturaActual = new Factura();
         modeloTabla.setRowCount(0);
@@ -182,6 +183,8 @@ public class FrmFactura extends javax.swing.JFrame {
         jLabel4.setText("No. Factura:");
 
         txtFecha.setEditable(false);
+
+        txtNumFactura.setEditable(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

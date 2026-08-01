@@ -77,6 +77,21 @@ public class Factura {
         return total;
     }
 
+    public Object[][] getDetallesFilas() {
+        if (detalles == null || detalles.isEmpty()) {
+            return new Object[0][0];
+        }
+        Object[][] filas = new Object[detalles.size()][4];
+        for (int i = 0; i < detalles.size(); i++) {
+            FacturaDetalle d = detalles.get(i);
+            filas[i][0] = d.getProducto();
+            filas[i][1] = d.getCantidad();
+            filas[i][2] = d.getPrecio();
+            filas[i][3] = d.getSubtotal();
+        }
+        return filas;
+    }
+
     public void setTotal(double total) {
         this.total = total;
     }
