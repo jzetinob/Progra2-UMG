@@ -16,6 +16,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     FrmFactura facturaVentana;
     FrmListaFacturas listaVentana;
+    FrmProductos productosVentana;
+    FrmClientes clientesVentana;
 
     public FrmPrincipal() {
         initComponents();
@@ -38,6 +40,24 @@ public class FrmPrincipal extends javax.swing.JFrame {
         }
         listaVentana.setVisible(true);
         listaVentana.toFront();
+    }
+
+    private void abrirProductos() {
+        if (productosVentana == null || !productosVentana.isDisplayable()) {
+            productosVentana = new FrmProductos();
+            productosVentana.setLocationRelativeTo(this);
+        }
+        productosVentana.setVisible(true);
+        productosVentana.toFront();
+    }
+
+    private void abrirClientes() {
+        if (clientesVentana == null || !clientesVentana.isDisplayable()) {
+            clientesVentana = new FrmClientes();
+            clientesVentana.setLocationRelativeTo(this);
+        }
+        clientesVentana.setVisible(true);
+        clientesVentana.toFront();
     }
 
     private void limpiarFactura() {
@@ -73,6 +93,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
         miNuevaFactura = new javax.swing.JMenuItem();
         miVerFacturas = new javax.swing.JMenuItem();
         miSalir = new javax.swing.JMenuItem();
+        mnCatalogos = new javax.swing.JMenu();
+        miProductos = new javax.swing.JMenuItem();
+        miClientes = new javax.swing.JMenuItem();
         mnEdicion = new javax.swing.JMenu();
         miLimpiar = new javax.swing.JMenuItem();
         mnAyuda = new javax.swing.JMenu();
@@ -143,6 +166,29 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jMenuBar1.add(mnArchivo);
 
+        mnCatalogos.setText("Catálogos");
+        mnCatalogos.setMnemonic('C');
+
+        miProductos.setText("Productos");
+        miProductos.setMnemonic('P');
+        miProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miProductosActionPerformed(evt);
+            }
+        });
+        mnCatalogos.add(miProductos);
+
+        miClientes.setText("Clientes");
+        miClientes.setMnemonic('C');
+        miClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miClientesActionPerformed(evt);
+            }
+        });
+        mnCatalogos.add(miClientes);
+
+        jMenuBar1.add(mnCatalogos);
+
         mnEdicion.setText("Edición");
         mnEdicion.setMnemonic('E');
 
@@ -189,6 +235,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
         abrirListaFacturas();
     }//GEN-LAST:event_miVerFacturasActionPerformed
 
+    private void miProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miProductosActionPerformed
+        abrirProductos();
+    }//GEN-LAST:event_miProductosActionPerformed
+
+    private void miClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miClientesActionPerformed
+        abrirClientes();
+    }//GEN-LAST:event_miClientesActionPerformed
+
     private void miLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLimpiarActionPerformed
         limpiarFactura();
     }//GEN-LAST:event_miLimpiarActionPerformed
@@ -218,10 +272,13 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu mnArchivo;
     private javax.swing.JMenu mnAyuda;
+    private javax.swing.JMenu mnCatalogos;
     private javax.swing.JMenu mnEdicion;
     private javax.swing.JMenuItem miAcercaDe;
+    private javax.swing.JMenuItem miClientes;
     private javax.swing.JMenuItem miLimpiar;
     private javax.swing.JMenuItem miNuevaFactura;
+    private javax.swing.JMenuItem miProductos;
     private javax.swing.JMenuItem miSalir;
     private javax.swing.JMenuItem miVerFacturas;
     // End of variables declaration//GEN-END:variables
