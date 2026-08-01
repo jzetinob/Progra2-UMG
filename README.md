@@ -1,6 +1,6 @@
 # Sistema de Ventas
 
-Sistema de facturación de escritorio en Java Swing con patrón MVC — Sistema de facturación de escritorio en **Java Swing** con patrón **MVC**.
+Sistema de facturación de escritorio en **Java Swing** con patrón **MVC**.
 
 ## ¿Qué hace?
 
@@ -45,17 +45,18 @@ Documentación detallada en [`docs/`](docs/).
 
 ## Historial de desarrollo
 
-| Fase | Qué se hizo | Commit |
-|---|---|---|
-| — | Formulario de facturación base + menú principal | `61ee3da` |
-| — | Lista de facturas registradas | `8d6ee12` |
-| 1 | Persistencia CSV + número de factura automático | `98b6107` |
-| 2 | Lista completa: eliminar, ver detalle, actualizar | `0ff5b04` |
-| 3 | Catálogos de productos y clientes | `397e539` |
-| 4 | Combos de catálogo en la factura | `f0c5f20` |
-| 5 | Impresión con vista previa | `956c633` |
-| 6 | Validaciones | `b0690ec` |
-| — | Fix: inicialización del singleton y correlativo | `53338aa` |
+| Etapa | Qué se hizo |
+|---|---|
+| — | Formulario de facturación base + menú principal |
+| — | Lista de facturas registradas |
+| 1 | Persistencia CSV + número de factura automático |
+| 2 | Lista completa: eliminar, ver detalle, actualizar |
+| 3 | Catálogos de productos y clientes |
+| 4 | Combos de catálogo en la factura |
+| 5 | Impresión con vista previa |
+| 6 | Validaciones |
+| — | Fix: inicialización del singleton y correlativo |
+| — | Buscador con autocompletado en la factura |
 
 ## Documentación
 

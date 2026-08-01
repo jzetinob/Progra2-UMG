@@ -1,21 +1,21 @@
 # Plan: Completar el Sistema de Ventas
 
 **Fecha:** 2026-08-01
-**Proyecto:** Sistema de Ventas (
+**Proyecto:** Sistema de Ventas
 **Repo:** https://github.com/jzetinob/sistema-ventas
 **Documentación completa:** [README.md](../README.md) · [ARQUITECTURA.md](ARQUITECTURA.md)
 
 ## Estado actual
 
-| Fase | Estado | Commit |
-|---|---|---|
-| 1 — Persistencia CSV | ✅ Completada | `98b6107` |
-| 2 — Lista de facturas completa | ✅ Completada | `0ff5b04` |
-| 3 — Catálogos | ✅ Completada | `397e539` |
-| 4 — Combos en la factura | ✅ Completada | `f0c5f20` |
-| 5 — Impresión con vista previa | ✅ Completada | `956c633` |
-| 6 — Validaciones | ✅ Completada | `b0690ec` |
-| 7 — Pruebas y entrega | ⏳ En curso | — |
+| Fase | Estado |
+|---|---|
+| 1 — Persistencia CSV | ✅ Completada |
+| 2 — Lista de facturas completa | ✅ Completada |
+| 3 — Catálogos | ✅ Completada |
+| 4 — Combos en la factura | ✅ Completada |
+| 5 — Impresión con vista previa | ✅ Completada |
+| 6 — Validaciones | ✅ Completada |
+| 7 — Pruebas y documentación | ⏳ En curso |
 
 Este archivo es el **historial de decisiones** (el "por qué" de cada cosa). La descripción técnica de cómo está implementado vive en [ARQUITECTURA.md](ARQUITECTURA.md).
 
@@ -40,14 +40,14 @@ git log --oneline              # muestra los commits de cada fase
 ## Contexto
 El objetivo era un formulario de facturación con menú principal (Archivo, Edición, Ayuda en español). El software ya tiene: ventana principal con menú, factura funcional (cliente, fecha, número, tabla de productos, total, Agregar/Eliminar/Guardar) y lista de facturas registradas. Se decidió completarlo para que sea un sistema de ventas completo, con persistencia de datos.
 
-## Decisiones tomadas ()
+## Decisiones tomadas
 1. **Persistencia en CSV / texto plano** (sin librerías) como puente hasta SQLite. Cuando se necesite base de datos, solo se crea un DAO nuevo (`FacturaDAOSQLite`) y se cambia una línea en el controlador; la interfaz `FacturaDAO` ya lo permite.
-2. **Catálogos integrados con la factura mediante combos** (JComboBox): el producto se elige del catálogo y el precio se autollena; el cliente se autollena con su NIT.
+2. **Catálogos integrados con la factura mediante combos** (JComboBox): el producto se elige del catálogo y el precio se autollena; el cliente se autollena con su NIT. (Reemplazada más adelante por el buscador autocompletado, ver "Correcciones posteriores al plan").
 3. **Impresión con vista previa**: se dibuja el ticket con Graphics2D y se imprime con el diálogo estándar de Windows (`java.awt.print.Printable`), sin dependencias externas.
-4. Todo sigue el patrón **MVC** (modelo, dao, controlador, vista) usado en el proyecto y las relaciones de asociación, agregación y composición se conservan.
+4. Todo sigue el patrón **MVC** (modelo, dao, controlador, vista) y las relaciones de asociación, agregación y composición se conservan.
 
 ## Detalle de implementación importante
-`FacturaDetalle` es una clase anidada package-private (composición). El DAO (paquete `dao`) y las vistas (paquete `vista`) no pueden iterar sus campos directamente. Por eso `Factura` ganará un método público `getDetallesFilas()` que devuelve `Object[][]` (producto, cantidad, precio, subtotal), manteniendo el encapsulamiento.
+`FacturaDetalle` es una clase anidada package-private (composición). El DAO (paquete `dao`) y las vistas (paquete `vista`) no pueden iterar sus campos directamente. Por eso `Factura` ganó un método público `getDetallesFilas()` que devuelve `Object[][]` (producto, cantidad, precio, subtotal), manteniendo el encapsulamiento.
 
 ## Fases
 
@@ -73,7 +73,7 @@ El objetivo era un formulario de facturación con menú principal (Archivo, Edic
 - `FrmPrincipal.java`: nuevo menú **Catálogos** → Productos / Clientes.
 
 ### Fase 4 — Combos en la factura
-- `FrmFactura.java`: `txtProducto` se convierte en `cmbProducto` (muestra "código - nombre"; al elegir autollena el precio). `cmbCliente` autollena NIT + nombre. Los campos siguen siendo editables para entrada manual.
+- `FrmFactura.java`: `txtProducto` se convierte en `cmbProducto` (muestra "código - nombre"; al elegir autollena el precio). `cmbCliente` autollena NIT + nombre. Los campos siguen siendo editables para entrada manual. (Ver la corrección del buscador más abajo.)
 
 ### Fase 5 — Impresión con vista previa
 - `vista/TicketFactura.java`: implementa `java.awt.print.Printable`; dibuja el ticket (cliente, fecha, número, productos, total).
@@ -86,10 +86,10 @@ El objetivo era un formulario de facturación con menú principal (Archivo, Edic
 - Producto duplicado en la misma factura.
 - Código de producto y NIT de cliente duplicados en catálogos.
 
-### Fase 7 — Pruebas y entrega
+### Fase 7 — Pruebas y documentación
 - Compilar después de cada fase (`javac` manual, sin Maven local) y probar el flujo completo en NetBeans.
 - Commits incrementales y push a `origin/main`.
-- Capturas de cada pantalla y PDF final con explicación (asociación, agregación, composición, singleton, persistencia CSV, impresión).
+- Documentación final con explicación (asociación, agregación, composición, singleton, persistencia CSV, impresión).
 
 ## Notas para el futuro (SQLite)
 - Agregar dependencia `org.xerial:sqlite-jdbc` al `pom.xml`.
@@ -98,6 +98,6 @@ El objetivo era un formulario de facturación con menú principal (Archivo, Edic
 - El resto del código no se toca.
 
 ## Correcciones posteriores al plan
-- **Commit `53338aa`**: se corrigió el orden de inicialización del singleton CSV (la instancia se creaba antes que las constantes de rutas, provocando NPE) y el correlativo de factura ahora se consume al pre-fill (evita números repetidos).
+- Se corrigió el orden de inicialización del singleton CSV (la instancia se creaba antes que las constantes de rutas, provocando NPE) y el correlativo de factura ahora se consume al pre-fill (evita números repetidos).
 - La persistencia se verificó con una prueba automatizada: guardar → simular reinicio (nueva JVM) → los datos se recuperan y el correlativo continúa (FAC-0002).
-- **Buscador inteligente (commit `14b523b`)**: la decisión 2 (combos) se reemplazó por el componente reutilizable `CampoBusqueda` (autocompletado): se escribe y filtra por código/NIT o nombre, con flechas + Enter o clic para elegir. Motivo: con catálogos grandes, un desplegable no es productivo. Si algún día hay millones de registros, la búsqueda real debe pasar a SQLite con `LIKE`.
+- **Buscador inteligente**: la decisión 2 (combos) se reemplazó por el componente reutilizable `CampoBusqueda` (autocompletado): se escribe y filtra por código/NIT o nombre, con flechas + Enter o clic para elegir. Motivo: con catálogos grandes, un desplegable no es productivo. Si algún día hay millones de registros, la búsqueda real debe pasar a SQLite con `LIKE`.

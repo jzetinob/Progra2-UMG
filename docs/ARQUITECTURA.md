@@ -6,10 +6,10 @@ El proyecto se divide en 4 paquetes bajo `com.josue.ventas`:
 
 | Paquete | Responsabilidad | Clases |
 |---|---|---|
-| `modelo` | Datos de negocio (entidades) | `Factura` (+ clase anidada `FacturaDetalle`), `Producto`, `Cliente`, `` |
-| `dao` | Acceso a datos (persistencia) | `FacturaDAO`, `FacturaDAOCsv`, ``, `ProductoDAO`, `ProductoDAOCsv`, `ClienteDAO`, `ClienteDAOCsv`, `CsvUtil` |
-| `controlador` | Lógica entre vista y DAO | `FacturaController`, `ProductoController`, `ClienteController`, `Controller` |
-| `vista` | Interfaces gráficas (JFrames) | `FrmPrincipal`, `FrmFactura`, `FrmListaFacturas`, `FrmDetalleFactura`, `FrmProductos`, `FrmClientes`, `FrmVistaPreviaFactura`, `TicketFactura`, `Frm`, `` |
+| `modelo` | Datos de negocio (entidades) | `Factura` (+ clase anidada `FacturaDetalle`), `Producto`, `Cliente` |
+| `dao` | Acceso a datos (persistencia) | `FacturaDAO`, `FacturaDAOCsv`, `ProductoDAO`, `ProductoDAOCsv`, `ClienteDAO`, `ClienteDAOCsv`, `CsvUtil` |
+| `controlador` | Lógica entre vista y DAO | `FacturaController`, `ProductoController`, `ClienteController` |
+| `vista` | Interfaces gráficas (JFrames) | `FrmPrincipal`, `FrmFactura`, `FrmListaFacturas`, `FrmDetalleFactura`, `FrmProductos`, `FrmClientes`, `FrmVistaPreviaFactura`, `TicketFactura`, `CampoBusqueda` |
 
 Flujo de datos:
 
@@ -23,7 +23,7 @@ Controlador  ──►  DAO (interfaz)
                  Archivos en datos/
 ```
 
-## Relaciones entre objetos 
+## Relaciones entre objetos
 
 ### Asociación
 Cada vista conoce a su controlador, y cada controlador conoce a su DAO:
@@ -58,7 +58,7 @@ public static FacturaDAOCsv getInstancia() { return instancia; }
 
 Gracias a esto, todas las ventanas del programa ven los mismos datos (un `FrmFactura` guarda y `FrmListaFacturas` ve lo guardado).
 
-> Detalle importante: la constante `instancia` se declara DESPUÉS de las constantes de rutas de archivos. Si se declara antes, el constructor se ejecuta cuando las rutas aún son `null` (error de orden de inicialización estática que se corrigió en el commit `53338aa`).
+> Detalle importante: la constante `instancia` se declara DESPUÉS de las constantes de rutas de archivos. Si se declara antes, el constructor se ejecuta cuando las rutas aún son `null` (error de orden de inicialización estática que se corrigió más adelante en el historial).
 
 ## Persistencia en CSV
 
@@ -100,6 +100,14 @@ Mecánica:
 - **Ayuda**: Acerca de.
 
 Las ventanas secundarias se abren centradas respecto a la principal y se reutilizan si ya están abiertas (`isDisplayable()`).
+
+## Buscador con autocompletado
+
+`CampoBusqueda` es un componente reutilizable (JTextField + popup + JList) que filtra a medida que se escribe (contiene, sin distinguir mayúsculas):
+
+- Flechas ↑/↓ para moverse, Enter para elegir, Escape para cerrar el popup.
+- Al elegir un cliente, se autollenan NIT y nombre; al elegir un producto, se autollena el precio.
+- Se usa en `FrmFactura` para cliente y producto; funciona aunque el catálogo sea grande.
 
 ## Futuro: SQLite
 

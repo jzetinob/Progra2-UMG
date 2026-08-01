@@ -78,7 +78,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void acercaDe() {
         JOptionPane.showMessageDialog(this,
-                "Sistema de Ventas\nVersión 1.0\n\nJosue Zetino\n",
+                "Sistema de Ventas\nVersión 1.0\n\nJosue Zetino",
                 "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }
 
