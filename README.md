@@ -6,7 +6,7 @@ Sistema de facturación de escritorio en Java Swing con patrón MVC — Sistema 
 
 - **Ventana principal** con menú clásico: Archivo, Catálogos, Edición y Ayuda (en español).
 - **Facturación**: cliente, NIT, fecha automática, número de factura automático (FAC-0001, FAC-0002, ...), tabla de productos con subtotales y total, botones Agregar / Eliminar / Guardar / Imprimir.
-- **Catálogos**: CRUD completo de productos (código, nombre, precio) y clientes (NIT, nombre, dirección, teléfono), integrados con la factura mediante combos.
+- **Catálogos**: CRUD completo de productos (código, nombre, precio) y clientes (NIT, nombre, dirección, teléfono), integrados con la factura mediante un **buscador con autocompletado** (filtra por código/NIT o nombre mientras escribes, sin depender del tamaño del catálogo).
 - **Persistencia**: los datos se guardan en archivos CSV dentro de la carpeta `datos/` (no se pierden al cerrar el programa).
 - **Impresión**: vista previa del ticket y envío a la impresora con el diálogo estándar de Windows (`java.awt.print`, sin librerías externas).
 - **Validaciones**: NIT guatemalteco (8-13 dígitos), números de factura únicos, productos sin repetir, código/NIT únicos en catálogos.

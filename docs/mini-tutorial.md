@@ -21,9 +21,9 @@ Corre el proyecto en NetBeans (o `FrmPrincipal.java` → Run File). Se abre la v
 ## 4. Crear la factura
 
 - Menú **Archivo → Nueva Factura**:
-  - En el combo **Cliente del catálogo** elige el cliente → autollena NIT y nombre (aún puedes editarlos).
+  - En el campo **Cliente del catálogo** escribe NIT o nombre: las sugerencias se filtran mientras escribes. Elige con las flechas + Enter (o clic) → autollena NIT y nombre (aún puedes editarlos).
   - El **número de factura** ya viene solo (`FAC-0001`, no editable).
-  - En **Agregar Producto**: elige el producto del combo → el **precio se autollena** → escribe la **Cantidad** → clic en **Agregar**. El total se actualiza solo.
+  - En **Agregar Producto**: escribe código o nombre del producto en el campo de búsqueda → elige de las sugerencias → el **precio se autollena** → escribe la **Cantidad** → clic en **Agregar**. El total se actualiza solo.
   - Clic en **Guardar**.
 
 ## 5. Ver lo guardado
@@ -41,6 +41,7 @@ Los datos **no se pierden**: se guardan en archivos CSV dentro de la carpeta `da
 
 ## Pistas
 
-- Si el combo de producto está vacío, todavía no hay productos en el catálogo. El orden siempre es: **catálogo → factura**.
+- Si el campo de búsqueda de producto no muestra nada, todavía no hay productos en el catálogo. El orden siempre es: **catálogo → factura**.
+- El buscador no distingue mayúsculas y filtra por NIT/código o por nombre.
 - El NIT debe tener entre 8 y 13 dígitos; los guiones son opcionales.
 - No se puede agregar dos veces el mismo producto a una factura.

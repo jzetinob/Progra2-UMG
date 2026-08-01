@@ -40,27 +40,31 @@ public class FrmFactura extends javax.swing.JFrame {
         facturaActual = new Factura();
         configurarTabla();
         fechaActual();
-        cargarCombos();
+        cargarBuscadores();
         txtNumFactura.setText(controller.obtenerSiguienteNumeroFactura());
     }
 
-    private void cargarCombos() {
-        cmbProducto.removeAllItems();
+    private void cargarBuscadores() {
+        List<String> etiquetasProductos = new ArrayList<>();
         List<Producto> productos = productoController.GetProductos();
         for (Producto p : productos) {
-            cmbProducto.addItem(p.getCodigo() + " - " + p.getNombre());
+            etiquetasProductos.add(p.getCodigo() + " - " + p.getNombre());
         }
-        cmbCliente.removeAllItems();
+        campoBuscarProducto.setElementos(etiquetasProductos);
+
+        List<String> etiquetasClientes = new ArrayList<>();
         List<Cliente> clientes = clienteController.GetClientes();
         for (Cliente c : clientes) {
-            cmbCliente.addItem(c.getNit() + " - " + c.getNombre());
+            etiquetasClientes.add(c.getNit() + " - " + c.getNombre());
         }
-        cmbProducto.addActionListener(new java.awt.event.ActionListener() {
+        campoBuscarCliente.setElementos(etiquetasClientes);
+
+        campoBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productoSeleccionado();
             }
         });
-        cmbCliente.addActionListener(new java.awt.event.ActionListener() {
+        campoBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clienteSeleccionado();
             }
@@ -68,26 +72,25 @@ public class FrmFactura extends javax.swing.JFrame {
     }
 
     private void productoSeleccionado() {
-        int indice = cmbProducto.getSelectedIndex();
-        if (indice == -1) {
-            return;
-        }
-        List<Producto> productos = productoController.GetProductos();
-        if (indice < productos.size()) {
-            txtPrecio.setText(String.format("%.2f", productos.get(indice).getPrecio()));
+        String texto = campoBuscarProducto.getText().trim();
+        for (Producto p : productoController.GetProductos()) {
+            if ((p.getCodigo() + " - " + p.getNombre()).equalsIgnoreCase(texto)
+                    || p.getCodigo().equalsIgnoreCase(texto)) {
+                txtPrecio.setText(String.format("%.2f", p.getPrecio()));
+                return;
+            }
         }
     }
 
     private void clienteSeleccionado() {
-        int indice = cmbCliente.getSelectedIndex();
-        if (indice == -1) {
-            return;
-        }
-        List<Cliente> clientes = clienteController.GetClientes();
-        if (indice < clientes.size()) {
-            Cliente c = clientes.get(indice);
-            txtCliente.setText(c.getNombre());
-            txtNit.setText(c.getNit());
+        String texto = campoBuscarCliente.getText().trim();
+        for (Cliente c : clienteController.GetClientes()) {
+            if ((c.getNit() + " - " + c.getNombre()).equalsIgnoreCase(texto)
+                    || c.getNit().equalsIgnoreCase(texto)) {
+                txtCliente.setText(c.getNombre());
+                txtNit.setText(c.getNit());
+                return;
+            }
         }
     }
 
@@ -108,11 +111,11 @@ public class FrmFactura extends javax.swing.JFrame {
     }
 
     private void agregarProducto() {
-        String producto = (String) cmbProducto.getSelectedItem();
+        String producto = campoBuscarProducto.getText().trim();
         String cantidadText = txtCantidad.getText().trim();
         String precioText = txtPrecio.getText().trim();
 
-        if (producto == null || cantidadText.isEmpty() || precioText.isEmpty()) {
+        if (producto.isEmpty() || cantidadText.isEmpty() || precioText.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Complete todos los campos del producto.");
             return;
         }
@@ -162,7 +165,7 @@ public class FrmFactura extends javax.swing.JFrame {
     }
 
     private void limpiarCamposProducto() {
-        cmbProducto.setSelectedIndex(-1);
+        campoBuscarProducto.setText("");
         txtCantidad.setText("");
         txtPrecio.setText("");
     }
@@ -251,12 +254,12 @@ public class FrmFactura extends javax.swing.JFrame {
         txtFecha = new javax.swing.JTextField();
         txtNumFactura = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        cmbCliente = new javax.swing.JComboBox<>();
+        campoBuscarCliente = new CampoBusqueda();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        cmbProducto = new javax.swing.JComboBox<>();
+        campoBuscarProducto = new CampoBusqueda();
         txtCantidad = new javax.swing.JTextField();
         txtPrecio = new javax.swing.JTextField();
         btnAgregar = new javax.swing.JButton();
@@ -313,7 +316,7 @@ public class FrmFactura extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(18, 18, 18)
-                        .addComponent(cmbCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(campoBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -334,7 +337,7 @@ public class FrmFactura extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(cmbCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(campoBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -361,7 +364,7 @@ public class FrmFactura extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
-                .addComponent(cmbProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(campoBuscarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
@@ -380,7 +383,7 @@ public class FrmFactura extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(cmbProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(campoBuscarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
@@ -508,8 +511,8 @@ public class FrmFactura extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnImprimir;
-    private javax.swing.JComboBox<String> cmbCliente;
-    private javax.swing.JComboBox<String> cmbProducto;
+    private CampoBusqueda campoBuscarCliente;
+    private CampoBusqueda campoBuscarProducto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
