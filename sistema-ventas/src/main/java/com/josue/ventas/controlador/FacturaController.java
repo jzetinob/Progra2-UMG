@@ -18,7 +18,7 @@ public class FacturaController {
      dao;
 
     public FacturaController() {
-        dao = new ();
+        dao = .getInstancia();
     }
 
     public void Guardar(Factura factura) {

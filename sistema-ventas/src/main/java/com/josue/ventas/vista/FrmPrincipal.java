@@ -15,6 +15,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmPrincipal.class.getName());
 
     FrmFactura facturaVentana;
+    FrmListaFacturas listaVentana;
 
     public FrmPrincipal() {
         initComponents();
@@ -28,6 +29,15 @@ public class FrmPrincipal extends javax.swing.JFrame {
         }
         facturaVentana.setVisible(true);
         facturaVentana.toFront();
+    }
+
+    private void abrirListaFacturas() {
+        if (listaVentana == null || !listaVentana.isDisplayable()) {
+            listaVentana = new FrmListaFacturas();
+            listaVentana.setLocationRelativeTo(this);
+        }
+        listaVentana.setVisible(true);
+        listaVentana.toFront();
     }
 
     private void limpiarFactura() {
@@ -61,6 +71,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         mnArchivo = new javax.swing.JMenu();
         miNuevaFactura = new javax.swing.JMenuItem();
+        miVerFacturas = new javax.swing.JMenuItem();
         miSalir = new javax.swing.JMenuItem();
         mnEdicion = new javax.swing.JMenu();
         miLimpiar = new javax.swing.JMenuItem();
@@ -108,6 +119,15 @@ public class FrmPrincipal extends javax.swing.JFrame {
             }
         });
         mnArchivo.add(miNuevaFactura);
+
+        miVerFacturas.setText("Ver Facturas");
+        miVerFacturas.setMnemonic('V');
+        miVerFacturas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miVerFacturasActionPerformed(evt);
+            }
+        });
+        mnArchivo.add(miVerFacturas);
 
         mnArchivo.addSeparator();
 
@@ -165,6 +185,10 @@ public class FrmPrincipal extends javax.swing.JFrame {
         salir();
     }//GEN-LAST:event_miSalirActionPerformed
 
+    private void miVerFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miVerFacturasActionPerformed
+        abrirListaFacturas();
+    }//GEN-LAST:event_miVerFacturasActionPerformed
+
     private void miLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLimpiarActionPerformed
         limpiarFactura();
     }//GEN-LAST:event_miLimpiarActionPerformed
@@ -199,5 +223,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem miLimpiar;
     private javax.swing.JMenuItem miNuevaFactura;
     private javax.swing.JMenuItem miSalir;
+    private javax.swing.JMenuItem miVerFacturas;
     // End of variables declaration//GEN-END:variables
 }
