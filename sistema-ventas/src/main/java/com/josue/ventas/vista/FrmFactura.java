@@ -24,12 +24,12 @@ public class FrmFactura extends javax.swing.JFrame {
 
     FacturaController controller;
     DefaultTableModel modeloTabla;
-    List<Factura.FacturaDetalle> listaDetalles;
+    Factura facturaActual;
 
     public FrmFactura() {
         initComponents();
         controller = new FacturaController();
-        listaDetalles = new ArrayList<>();
+        facturaActual = new Factura();
         configurarTabla();
         fechaActual();
     }
@@ -69,11 +69,8 @@ public class FrmFactura extends javax.swing.JFrame {
                 return;
             }
 
-            double subtotal = cantidad * precio;
-            Factura.FacturaDetalle detalle = new Factura.FacturaDetalle(producto, cantidad, precio);
-            listaDetalles.add(detalle);
-
-            Object[] fila = {producto, cantidad, precio, subtotal};
+            facturaActual.agregarDetalle(producto, cantidad, precio);
+            Object[] fila = {producto, cantidad, precio, cantidad * precio};
             modeloTabla.addRow(fila);
 
             limpiarCamposProducto();
@@ -91,17 +88,13 @@ public class FrmFactura extends javax.swing.JFrame {
             return;
         }
 
-        listaDetalles.remove(filaSeleccionada);
+        facturaActual.eliminarDetalle(filaSeleccionada);
         modeloTabla.removeRow(filaSeleccionada);
         actualizarTotal();
     }
 
     private void actualizarTotal() {
-        double total = 0;
-        for (Factura.FacturaDetalle d : listaDetalles) {
-            total += d.getSubtotal();
-        }
-        lblTotal.setText(String.format("%.2f", total));
+        lblTotal.setText(String.format("%.2f", facturaActual.getTotal()));
     }
 
     private void limpiarCamposProducto() {
@@ -114,27 +107,24 @@ public class FrmFactura extends javax.swing.JFrame {
         String cliente = txtCliente.getText().trim();
         String nit = txtNit.getText().trim();
         String numeroFactura = txtNumFactura.getText().trim();
-        String fecha = txtFecha.getText().trim();
 
         if (cliente.isEmpty() || nit.isEmpty() || numeroFactura.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Complete la información del cliente y el número de factura.");
             return;
         }
 
-        if (listaDetalles.isEmpty()) {
+        if (facturaActual.getDetalles().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe agregar al menos un producto.");
             return;
         }
 
-        Factura factura = new Factura();
-        factura.setCliente(cliente);
-        factura.setNit(nit);
-        factura.setNumeroFactura(numeroFactura);
-        factura.setFecha(new Date());
-        factura.setDetalles(listaDetalles);
-        factura.setTotal(Double.parseDouble(lblTotal.getText()));
+        facturaActual.setCliente(cliente);
+        facturaActual.setNit(nit);
+        facturaActual.setNumeroFactura(numeroFactura);
+        facturaActual.setFecha(new Date());
+        facturaActual.setTotal(Double.parseDouble(lblTotal.getText()));
 
-        controller.Guardar(factura);
+        controller.Guardar(facturaActual);
         JOptionPane.showMessageDialog(this, "Factura guardada con éxito.");
 
         limpiarFormulario();
@@ -145,7 +135,7 @@ public class FrmFactura extends javax.swing.JFrame {
         txtNit.setText("");
         txtNumFactura.setText("");
         fechaActual();
-        listaDetalles.clear();
+        facturaActual = new Factura();
         modeloTabla.setRowCount(0);
         lblTotal.setText("0.00");
     }

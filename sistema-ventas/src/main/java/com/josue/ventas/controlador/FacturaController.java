@@ -32,4 +32,8 @@ public class FacturaController {
     public void Eliminar(int id) {
         dao.eliminar(id);
     }
+
+    public void EliminarConDetalles(int id) {
+        dao.eliminarConDetalles(id);
+    }
 }

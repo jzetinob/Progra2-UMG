@@ -81,7 +81,8 @@ public class Factura {
         this.total = total;
     }
 
-    public void agregarDetalle(FacturaDetalle detalle) {
+    public void agregarDetalle(String producto, int cantidad, double precio) {
+        FacturaDetalle detalle = new FacturaDetalle(producto, cantidad, precio);
         this.detalles.add(detalle);
         calcularTotal();
     }
@@ -101,7 +102,7 @@ public class Factura {
         this.total = suma;
     }
 
-    public static class FacturaDetalle {
+    class FacturaDetalle {
         private String producto;
         private int cantidad;
         private double precio;
