@@ -130,7 +130,7 @@ public class FrmFactura extends javax.swing.JFrame {
         limpiarFormulario();
     }
 
-    private void limpiarFormulario() {
+    public void limpiarFormulario() {
         txtCliente.setText("");
         txtNit.setText("");
         txtNumFactura.setText("");
@@ -168,7 +168,7 @@ public class FrmFactura extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Formulario de Facturación");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del Cliente"));
