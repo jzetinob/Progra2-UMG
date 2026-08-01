@@ -20,10 +20,10 @@ import java.util.List;
  */
 public class ProductoDAOCsv implements ProductoDAO {
 
-    private static final ProductoDAOCsv instancia = new ProductoDAOCsv();
-
     private static final String DIRECTORIO = "datos";
     private static final String ARCHIVO_PRODUCTOS = DIRECTORIO + File.separator + "productos.csv";
+
+    private static final ProductoDAOCsv instancia = new ProductoDAOCsv();
 
     private final List<Producto> productos = new ArrayList<>();
     private int siguienteId = 1;

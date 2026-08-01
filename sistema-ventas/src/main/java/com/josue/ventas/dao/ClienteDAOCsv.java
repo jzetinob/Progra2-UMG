@@ -20,10 +20,10 @@ import java.util.List;
  */
 public class ClienteDAOCsv implements ClienteDAO {
 
-    private static final ClienteDAOCsv instancia = new ClienteDAOCsv();
-
     private static final String DIRECTORIO = "datos";
     private static final String ARCHIVO_CLIENTES = DIRECTORIO + File.separator + "clientes.csv";
+
+    private static final ClienteDAOCsv instancia = new ClienteDAOCsv();
 
     private final List<Cliente> clientes = new ArrayList<>();
     private int siguienteId = 1;

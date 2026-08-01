@@ -23,12 +23,12 @@ import java.util.List;
  */
 public class FacturaDAOCsv implements FacturaDAO {
 
-    private static final FacturaDAOCsv instancia = new FacturaDAOCsv();
-
     private static final String DIRECTORIO = "datos";
     private static final String ARCHIVO_FACTURAS = DIRECTORIO + File.separator + "facturas.csv";
     private static final String ARCHIVO_DETALLES = DIRECTORIO + File.separator + "detalles.csv";
     private static final String ARCHIVO_CONTADOR = DIRECTORIO + File.separator + "contador.txt";
+
+    private static final FacturaDAOCsv instancia = new FacturaDAOCsv();
 
     private final List<Factura> facturas = new ArrayList<>();
     private int siguienteId = 1;
@@ -192,6 +192,6 @@ public class FacturaDAOCsv implements FacturaDAO {
 
     @Override
     public String obtenerSiguienteNumeroFactura() {
-        return String.format("FAC-%04d", siguienteCorrelativo);
+        return String.format("FAC-%04d", siguienteCorrelativo++);
     }
 }
