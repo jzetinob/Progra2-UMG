@@ -3,6 +3,21 @@
 **Fecha:** 2026-08-01
 **Proyecto:** Sistema de Ventas (
 **Repo:** https://github.com/jzetinob/sistema-ventas
+**Documentación completa:** [README.md](../README.md) · [ARQUITECTURA.md](ARQUITECTURA.md)
+
+## Estado actual
+
+| Fase | Estado | Commit |
+|---|---|---|
+| 1 — Persistencia CSV | ✅ Completada | `98b6107` |
+| 2 — Lista de facturas completa | ✅ Completada | `0ff5b04` |
+| 3 — Catálogos | ✅ Completada | `397e539` |
+| 4 — Combos en la factura | ✅ Completada | `f0c5f20` |
+| 5 — Impresión con vista previa | ✅ Completada | `956c633` |
+| 6 — Validaciones | ✅ Completada | `b0690ec` |
+| 7 — Pruebas y entrega | ⏳ En curso | — |
+
+Este archivo es el **historial de decisiones** (el "por qué" de cada cosa). La descripción técnica de cómo está implementado vive en [ARQUITECTURA.md](ARQUITECTURA.md).
 
 ## Contexto
 El objetivo era un formulario de facturación con menú principal (Archivo, Edición, Ayuda en español). El software ya tiene: ventana principal con menú, factura funcional (cliente, fecha, número, tabla de productos, total, Agregar/Eliminar/Guardar) y lista de facturas registradas. Se decidió completarlo para que sea un sistema de ventas completo, con persistencia de datos.
@@ -63,3 +78,7 @@ El objetivo era un formulario de facturación con menú principal (Archivo, Edic
 - Crear `FacturaDAOSQLite` (y análogos para Producto/Cliente) que implementen las mismas interfaces.
 - Cambiar la instancia usada en los controllers (1 línea por controller).
 - El resto del código no se toca.
+
+## Correcciones posteriores al plan
+- **Commit `53338aa`**: se corrigió el orden de inicialización del singleton CSV (la instancia se creaba antes que las constantes de rutas, provocando NPE) y el correlativo de factura ahora se consume al pre-fill (evita números repetidos).
+- La persistencia se verificó con una prueba automatizada: guardar → simular reinicio (nueva JVM) → los datos se recuperan y el correlativo continúa (FAC-0002).
