@@ -19,6 +19,24 @@
 
 Este archivo es el **historial de decisiones** (el "por qué" de cada cosa). La descripción técnica de cómo está implementado vive en [ARQUITECTURA.md](ARQUITECTURA.md).
 
+## Cómo saber si una fase está terminada
+
+Regla de cierre de fase (se cumple cuando el commit de la fase existe):
+
+1. **Compila** — el proyecto compila sin errores.
+2. **Se probó** — el flujo correspondiente se probó (en NetBeans o con prueba automatizada).
+3. **Estado actualizado** — la tabla de estado de este archivo tiene la fase en "✅ Completada".
+4. **Commit hecho** — el historial de git tiene el commit de la fase (todos se nombran con "Fase N: ...").
+
+Si la fase aparece "✅ Completada" en la tabla y su commit está en `git log`, **no se vuelve a ejecutar**: ya está implementada. Los fixes posteriores a una fase terminada van en commits separados y se anotan en "Correcciones posteriores al plan".
+
+Para verificar rápido:
+
+```
+git status                     # debe estar limpio si todo lo planeado está subido
+git log --oneline              # muestra los commits de cada fase
+```
+
 ## Contexto
 El objetivo era un formulario de facturación con menú principal (Archivo, Edición, Ayuda en español). El software ya tiene: ventana principal con menú, factura funcional (cliente, fecha, número, tabla de productos, total, Agregar/Eliminar/Guardar) y lista de facturas registradas. Se decidió completarlo para que sea un sistema de ventas completo, con persistencia de datos.
 
