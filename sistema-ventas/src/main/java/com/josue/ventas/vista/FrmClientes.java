@@ -57,6 +57,19 @@ public class FrmClientes extends javax.swing.JFrame {
         }
     }
 
+    private boolean validarNit(String nit) {
+        String soloDigitos = nit.replace("-", "").replace(" ", "");
+        if (soloDigitos.length() < 8 || soloDigitos.length() > 13) {
+            return false;
+        }
+        for (char c : soloDigitos.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void guardarCliente() {
         String nit = txtNit.getText().trim();
         String nombre = txtNombre.getText().trim();
@@ -65,6 +78,10 @@ public class FrmClientes extends javax.swing.JFrame {
 
         if (nit.isEmpty() || nombre.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Complete al menos el NIT y el nombre del cliente.");
+            return;
+        }
+        if (!validarNit(nit)) {
+            JOptionPane.showMessageDialog(this, "El NIT debe tener entre 8 y 13 dígitos (los guiones son opcionales).");
             return;
         }
         if (controller.ExisteNit(nit)) {
@@ -95,6 +112,10 @@ public class FrmClientes extends javax.swing.JFrame {
 
         if (nit.isEmpty() || nombre.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Complete al menos el NIT y el nombre del cliente.");
+            return;
+        }
+        if (!validarNit(nit)) {
+            JOptionPane.showMessageDialog(this, "El NIT debe tener entre 8 y 13 dígitos (los guiones son opcionales).");
             return;
         }
         String nitActual = (String) modeloTabla.getValueAt(fila, 1);

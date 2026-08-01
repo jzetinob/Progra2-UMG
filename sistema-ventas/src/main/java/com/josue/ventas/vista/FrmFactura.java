@@ -117,6 +117,13 @@ public class FrmFactura extends javax.swing.JFrame {
             return;
         }
 
+        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+            if (producto.equalsIgnoreCase(String.valueOf(modeloTabla.getValueAt(i, 0)))) {
+                JOptionPane.showMessageDialog(this, "Ese producto ya está agregado a la factura.");
+                return;
+            }
+        }
+
         try {
             int cantidad = Integer.parseInt(cantidadText);
             double precio = Double.parseDouble(precioText);
@@ -160,6 +167,19 @@ public class FrmFactura extends javax.swing.JFrame {
         txtPrecio.setText("");
     }
 
+    private boolean validarNit(String nit) {
+        String soloDigitos = nit.replace("-", "").replace(" ", "");
+        if (soloDigitos.length() < 8 || soloDigitos.length() > 13) {
+            return false;
+        }
+        for (char c : soloDigitos.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void guardarFactura() {
         String cliente = txtCliente.getText().trim();
         String nit = txtNit.getText().trim();
@@ -168,6 +188,18 @@ public class FrmFactura extends javax.swing.JFrame {
         if (cliente.isEmpty() || nit.isEmpty() || numeroFactura.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Complete la información del cliente y el número de factura.");
             return;
+        }
+
+        if (!validarNit(nit)) {
+            JOptionPane.showMessageDialog(this, "El NIT debe tener entre 8 y 13 dígitos (los guiones son opcionales).");
+            return;
+        }
+
+        for (Factura f : controller.GetFacturas()) {
+            if (f.getNumeroFactura() != null && f.getNumeroFactura().equalsIgnoreCase(numeroFactura)) {
+                JOptionPane.showMessageDialog(this, "Ya existe una factura con ese número.");
+                return;
+            }
         }
 
         if (facturaActual.getDetalles().isEmpty()) {
