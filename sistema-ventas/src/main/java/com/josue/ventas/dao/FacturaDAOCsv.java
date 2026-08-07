@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class FacturaDAOCsv implements FacturaDAO {
 
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FacturaDAOCsv.class.getName());
+
     private static final String DIRECTORIO = "datos";
     private static final String ARCHIVO_FACTURAS = DIRECTORIO + File.separator + "facturas.csv";
     private static final String ARCHIVO_DETALLES = DIRECTORIO + File.separator + "detalles.csv";
@@ -70,6 +72,7 @@ public class FacturaDAOCsv implements FacturaDAO {
                     }
                 }
             } catch (IOException ex) {
+                logger.log(java.util.logging.Level.WARNING, "No se pudo cargar el archivo de facturas: " + ARCHIVO_FACTURAS, ex);
             }
         }
         File archivoDetalles = new File(ARCHIVO_DETALLES);
@@ -87,6 +90,7 @@ public class FacturaDAOCsv implements FacturaDAO {
                     }
                 }
             } catch (IOException ex) {
+                logger.log(java.util.logging.Level.WARNING, "No se pudo cargar el archivo de detalles: " + ARCHIVO_DETALLES, ex);
             }
         }
         File archivoContador = new File(ARCHIVO_CONTADOR);
@@ -97,6 +101,7 @@ public class FacturaDAOCsv implements FacturaDAO {
                     siguienteCorrelativo = Integer.parseInt(linea.trim());
                 }
             } catch (IOException ex) {
+                logger.log(java.util.logging.Level.WARNING, "No se pudo cargar el contador de facturas: " + ARCHIVO_CONTADOR, ex);
             }
         }
     }
@@ -120,6 +125,7 @@ public class FacturaDAOCsv implements FacturaDAO {
                 bw.newLine();
             }
         } catch (IOException ex) {
+            logger.log(java.util.logging.Level.WARNING, "No se pudo escribir el archivo de facturas: " + ARCHIVO_FACTURAS, ex);
         }
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO_DETALLES))) {
             for (Factura f : facturas) {
@@ -135,10 +141,12 @@ public class FacturaDAOCsv implements FacturaDAO {
                 }
             }
         } catch (IOException ex) {
+            logger.log(java.util.logging.Level.WARNING, "No se pudo escribir el archivo de detalles: " + ARCHIVO_DETALLES, ex);
         }
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO_CONTADOR))) {
             bw.write(String.valueOf(siguienteCorrelativo));
         } catch (IOException ex) {
+            logger.log(java.util.logging.Level.WARNING, "No se pudo escribir el contador de facturas: " + ARCHIVO_CONTADOR, ex);
         }
     }
 
@@ -158,9 +166,26 @@ public class FacturaDAOCsv implements FacturaDAO {
         }
         if (factura.getNumeroFactura() == null || factura.getNumeroFactura().isBlank()) {
             factura.setNumeroFactura(String.format("FAC-%04d", siguienteCorrelativo++));
+        } else {
+            adelantarCorrelativo(factura.getNumeroFactura());
         }
         facturas.add(factura);
         escribir();
+    }
+
+    private void adelantarCorrelativo(String numeroFactura) {
+        int ultimoGuion = numeroFactura.lastIndexOf('-');
+        if (ultimoGuion == -1) {
+            return;
+        }
+        try {
+            int numero = Integer.parseInt(numeroFactura.substring(ultimoGuion + 1));
+            if (numero >= siguienteCorrelativo) {
+                siguienteCorrelativo = numero + 1;
+            }
+        } catch (NumberFormatException ex) {
+            logger.log(java.util.logging.Level.WARNING, "No se pudo interpretar el número de factura: {0}", numeroFactura);
+        }
     }
 
     @Override
@@ -192,6 +217,6 @@ public class FacturaDAOCsv implements FacturaDAO {
 
     @Override
     public String obtenerSiguienteNumeroFactura() {
-        return String.format("FAC-%04d", siguienteCorrelativo++);
+        return String.format("FAC-%04d", siguienteCorrelativo);
     }
 }

@@ -137,7 +137,7 @@ public class FrmFactura extends javax.swing.JFrame {
             }
 
             facturaActual.agregarDetalle(producto, cantidad, precio);
-            Object[] fila = {producto, cantidad, precio, cantidad * precio};
+            Object[] fila = {producto, cantidad, String.format("%.2f", precio), String.format("%.2f", cantidad * precio)};
             modeloTabla.addRow(fila);
 
             limpiarCamposProducto();
@@ -214,7 +214,6 @@ public class FrmFactura extends javax.swing.JFrame {
         facturaActual.setNit(nit);
         facturaActual.setNumeroFactura(numeroFactura);
         facturaActual.setFecha(new Date());
-        facturaActual.setTotal(Double.parseDouble(lblTotal.getText()));
 
         controller.Guardar(facturaActual);
         JOptionPane.showMessageDialog(this, "Factura guardada con éxito.");

@@ -13,7 +13,7 @@ Sistema de facturación de escritorio en **Java Swing** con patrón **MVC**.
 
 ## Requisitos
 
-- JDK 25 (el proyecto compila con `maven.compiler.release 26`... si tu NetBeans no lo acepta, bájalo en `pom.xml`).
+- JDK 25 (el proyecto compila con `maven.compiler.release 25`).
 - NetBeans 22+ con soporte Maven.
 
 ## Cómo ejecutar
