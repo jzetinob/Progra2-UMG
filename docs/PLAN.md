@@ -101,3 +101,7 @@ El objetivo era un formulario de facturación con menú principal (Archivo, Edic
 - Se corrigió el orden de inicialización del singleton CSV (la instancia se creaba antes que las constantes de rutas, provocando NPE) y el correlativo de factura ahora se consume al pre-fill (evita números repetidos).
 - La persistencia se verificó con una prueba automatizada: guardar → simular reinicio (nueva JVM) → los datos se recuperan y el correlativo continúa (FAC-0002).
 - **Buscador inteligente**: la decisión 2 (combos) se reemplazó por el componente reutilizable `CampoBusqueda` (autocompletado): se escribe y filtra por código/NIT o nombre, con flechas + Enter o clic para elegir. Motivo: con catálogos grandes, un desplegable no es productivo. Si algún día hay millones de registros, la búsqueda real debe pasar a SQLite con `LIKE`.
+- **Correlativo sin quemar**: `obtenerSiguienteNumeroFactura()` ya no incrementa el contador (solo "peek"); el contador avanza recién al guardar la factura (el DAO adelanta el correlativo según el último número usado). Antes, abrir y cerrar el formulario sin guardar perdía números.
+- **Detalles del formulario**: precio y subtotal se muestran con formato de 2 decimales en la tabla; el total se toma de `facturaActual.getTotal()` (modelo) en lugar de parsear el label de la UI.
+- **Errores de I/O visibles**: los `catch` vacíos de `FacturaDAOCsv` ahora registran las fallas con `java.util.logging.Logger`.
+- **Compilación**: `maven.compiler.release` bajó de 26 a 25 para coincidir con el JDK instalado.

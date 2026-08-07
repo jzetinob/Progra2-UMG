@@ -57,6 +57,7 @@ Documentación detallada en [`docs/`](docs/).
 | 6 | Validaciones |
 | — | Fix: inicialización del singleton y correlativo |
 | — | Buscador con autocompletado en la factura |
+| — | Mejoras: correlativo sin quemar, formato de precios, logging del DAO |
 
 ## Documentación
 
