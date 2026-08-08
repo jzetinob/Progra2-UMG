@@ -15,19 +15,20 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author josue zetino
  */
-public class FrmListaFacturas extends javax.swing.JFrame {
+public class FrmListaFacturas extends javax.swing.JInternalFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmListaFacturas.class.getName());
 
     FacturaController controller;
     DefaultTableModel modeloTabla;
+    javax.swing.JDesktopPane escritorio;
 
-    public FrmListaFacturas() {
+    public FrmListaFacturas(javax.swing.JDesktopPane escritorio) {
         initComponents();
+        this.escritorio = escritorio;
         controller = new FacturaController();
         configurarTabla();
         cargarFacturas();
-        setLocationRelativeTo(null);
     }
 
     private void configurarTabla() {
@@ -82,7 +83,15 @@ public class FrmListaFacturas extends javax.swing.JFrame {
         int id = (int) modeloTabla.getValueAt(fila, 0);
         Factura factura = buscarFactura(id);
         if (factura != null) {
-            new FrmDetalleFactura(factura).setVisible(true);
+            FrmDetalleFactura detalle = new FrmDetalleFactura(factura);
+            escritorio.add(detalle);
+            detalle.setVisible(true);
+            try {
+                detalle.setSelected(true);
+            } catch (java.beans.PropertyVetoException ex) {
+                logger.log(java.util.logging.Level.WARNING, "No se pudo seleccionar el detalle.", ex);
+            }
+            detalle.toFront();
         }
     }
 
@@ -106,6 +115,10 @@ public class FrmListaFacturas extends javax.swing.JFrame {
         btnActualizar = new javax.swing.JButton();
         btnCerrar = new javax.swing.JButton();
 
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Facturas Registradas");
 
@@ -197,21 +210,6 @@ public class FrmListaFacturas extends javax.swing.JFrame {
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         dispose();
     }//GEN-LAST:event_btnCerrarActionPerformed
-
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        java.awt.EventQueue.invokeLater(() -> new FrmListaFacturas().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;

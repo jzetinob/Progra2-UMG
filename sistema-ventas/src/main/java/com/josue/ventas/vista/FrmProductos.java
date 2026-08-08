@@ -14,9 +14,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author josue zetino
  */
-public class FrmProductos extends javax.swing.JFrame {
-
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmProductos.class.getName());
+public class FrmProductos extends javax.swing.JInternalFrame {
 
     ProductoController controller;
     DefaultTableModel modeloTabla;
@@ -34,7 +32,6 @@ public class FrmProductos extends javax.swing.JFrame {
                 }
             }
         });
-        setLocationRelativeTo(null);
     }
 
     private void configurarTabla() {
@@ -180,6 +177,10 @@ public class FrmProductos extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProductos = new javax.swing.JTable();
 
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Catálogo de Productos");
 
@@ -315,21 +316,6 @@ public class FrmProductos extends javax.swing.JFrame {
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         limpiarCampos();
     }//GEN-LAST:event_btnLimpiarActionPerformed
-
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        java.awt.EventQueue.invokeLater(() -> new FrmProductos().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;

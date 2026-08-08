@@ -22,9 +22,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author josue zetino
  */
-public class FrmFactura extends javax.swing.JFrame {
-
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmFactura.class.getName());
+public class FrmFactura extends javax.swing.JInternalFrame {
 
     FacturaController controller;
     ProductoController productoController;
@@ -270,6 +268,10 @@ public class FrmFactura extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
 
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Formulario de Facturación");
 
@@ -489,21 +491,6 @@ public class FrmFactura extends javax.swing.JFrame {
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
         imprimirFactura();
     }//GEN-LAST:event_btnImprimirActionPerformed
-
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        java.awt.EventQueue.invokeLater(() -> new FrmFactura().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;

@@ -4,9 +4,14 @@
  */
 package com.josue.ventas.vista;
 
+import java.awt.Dimension;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 
 /**
+ * Ventana principal que actúa como contenedor MDI (Multiple Document
+ * Interface): mantiene un JDesktopPane donde se abren los formularios
+ * hijos (JInternalFrame) desde el menú.
  *
  * @author josue zetino
  */
@@ -27,37 +32,97 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private void abrirFactura() {
         if (facturaVentana == null || !facturaVentana.isDisplayable()) {
             facturaVentana = new FrmFactura();
-            facturaVentana.setLocationRelativeTo(this);
         }
-        facturaVentana.setVisible(true);
-        facturaVentana.toFront();
+        abrirFormulario(facturaVentana);
     }
 
     private void abrirListaFacturas() {
         if (listaVentana == null || !listaVentana.isDisplayable()) {
-            listaVentana = new FrmListaFacturas();
-            listaVentana.setLocationRelativeTo(this);
+            listaVentana = new FrmListaFacturas(jDesktopPane);
         }
-        listaVentana.setVisible(true);
-        listaVentana.toFront();
+        abrirFormulario(listaVentana);
     }
 
     private void abrirProductos() {
         if (productosVentana == null || !productosVentana.isDisplayable()) {
             productosVentana = new FrmProductos();
-            productosVentana.setLocationRelativeTo(this);
         }
-        productosVentana.setVisible(true);
-        productosVentana.toFront();
+        abrirFormulario(productosVentana);
     }
 
     private void abrirClientes() {
         if (clientesVentana == null || !clientesVentana.isDisplayable()) {
             clientesVentana = new FrmClientes();
-            clientesVentana.setLocationRelativeTo(this);
         }
-        clientesVentana.setVisible(true);
-        clientesVentana.toFront();
+        abrirFormulario(clientesVentana);
+    }
+
+    private void abrirFormulario(JInternalFrame frame) {
+        if (!frame.isVisible()) {
+            jDesktopPane.add(frame);
+            frame.setVisible(true);
+            Dimension escritorio = jDesktopPane.getSize();
+            frame.setLocation(Math.max(0, (escritorio.width - frame.getWidth()) / 2),
+                    Math.max(0, (escritorio.height - frame.getHeight()) / 2));
+        }
+        try {
+            frame.setSelected(true);
+        } catch (java.beans.PropertyVetoException ex) {
+            logger.log(java.util.logging.Level.WARNING, "No se pudo seleccionar la ventana hija.", ex);
+        }
+        frame.toFront();
+    }
+
+    private void cascada() {
+        int x = 0;
+        int y = 0;
+        for (JInternalFrame frame : jDesktopPane.getAllFrames()) {
+            if (!frame.isIcon()) {
+                frame.setLocation(x, y);
+                x += 30;
+                y += 30;
+            }
+        }
+    }
+
+    private void mosaico() {
+        java.util.List<JInternalFrame> visibles = new java.util.ArrayList<>();
+        for (JInternalFrame frame : jDesktopPane.getAllFrames()) {
+            if (!frame.isIcon()) {
+                visibles.add(frame);
+            }
+        }
+        if (visibles.isEmpty()) {
+            return;
+        }
+        int n = visibles.size();
+        int columnas = (int) Math.ceil(Math.sqrt(n));
+        int filas = (int) Math.ceil((double) n / columnas);
+        int ancho = jDesktopPane.getWidth() / columnas;
+        int alto = jDesktopPane.getHeight() / filas;
+        for (int i = 0; i < n; i++) {
+            visibles.get(i).setBounds((i % columnas) * ancho, (i / columnas) * alto, ancho, alto);
+        }
+    }
+
+    private void minimizarTodo() {
+        for (JInternalFrame frame : jDesktopPane.getAllFrames()) {
+            try {
+                frame.setIcon(true);
+            } catch (java.beans.PropertyVetoException ex) {
+                logger.log(java.util.logging.Level.WARNING, "No se pudo minimizar la ventana hija.", ex);
+            }
+        }
+    }
+
+    private void restaurarTodo() {
+        for (JInternalFrame frame : jDesktopPane.getAllFrames()) {
+            try {
+                frame.setIcon(false);
+            } catch (java.beans.PropertyVetoException ex) {
+                logger.log(java.util.logging.Level.WARNING, "No se pudo restaurar la ventana hija.", ex);
+            }
+        }
     }
 
     private void limpiarFactura() {
@@ -78,7 +143,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void acercaDe() {
         JOptionPane.showMessageDialog(this,
-                "Sistema de Ventas\nVersión 1.0\n\nJosue Zetino",
+                "Sistema de Ventas\nVersión 1.1 (MDI)\n\nJosue Zetino",
                 "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -86,8 +151,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnArchivo = new javax.swing.JMenu();
         miNuevaFactura = new javax.swing.JMenuItem();
@@ -98,37 +161,18 @@ public class FrmPrincipal extends javax.swing.JFrame {
         miClientes = new javax.swing.JMenuItem();
         mnEdicion = new javax.swing.JMenu();
         miLimpiar = new javax.swing.JMenuItem();
+        mnVentana = new javax.swing.JMenu();
+        miCascada = new javax.swing.JMenuItem();
+        miMosaico = new javax.swing.JMenuItem();
+        miMinimizar = new javax.swing.JMenuItem();
+        miRestaurar = new javax.swing.JMenuItem();
         mnAyuda = new javax.swing.JMenu();
         miAcercaDe = new javax.swing.JMenuItem();
+        jDesktopPane = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema de Ventas");
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36));
-        jLabel1.setText("SISTEMA DE VENTAS");
-
-        jLabel2.setText("Use el menú Archivo para crear una nueva factura");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addContainerGap(75, Short.MAX_VALUE))
-        );
+        setMinimumSize(new java.awt.Dimension(800, 600));
 
         mnArchivo.setText("Archivo");
         mnArchivo.setMnemonic('A');
@@ -203,6 +247,45 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jMenuBar1.add(mnEdicion);
 
+        mnVentana.setText("Ventana");
+        mnVentana.setMnemonic('V');
+
+        miCascada.setText("Cascada");
+        miCascada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miCascadaActionPerformed(evt);
+            }
+        });
+        mnVentana.add(miCascada);
+
+        miMosaico.setText("Mosaico");
+        miMosaico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miMosaicoActionPerformed(evt);
+            }
+        });
+        mnVentana.add(miMosaico);
+
+        mnVentana.addSeparator();
+
+        miMinimizar.setText("Minimizar todo");
+        miMinimizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miMinimizarActionPerformed(evt);
+            }
+        });
+        mnVentana.add(miMinimizar);
+
+        miRestaurar.setText("Restaurar todo");
+        miRestaurar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miRestaurarActionPerformed(evt);
+            }
+        });
+        mnVentana.add(miRestaurar);
+
+        jMenuBar1.add(mnVentana);
+
         mnAyuda.setText("Ayuda");
         mnAyuda.setMnemonic('y');
 
@@ -219,8 +302,21 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
+        jDesktopPane.setBackground(new java.awt.Color(204, 204, 204));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jDesktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jDesktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+        );
+
         pack();
-        setMinimumSize(new java.awt.Dimension(420, 240));
+        setSize(1000, 700);
     }// </editor-fold>//GEN-END:initComponents
 
     private void miNuevaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNuevaFacturaActionPerformed
@@ -247,6 +343,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
         limpiarFactura();
     }//GEN-LAST:event_miLimpiarActionPerformed
 
+    private void miCascadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCascadaActionPerformed
+        cascada();
+    }//GEN-LAST:event_miCascadaActionPerformed
+
+    private void miMosaicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMosaicoActionPerformed
+        mosaico();
+    }//GEN-LAST:event_miMosaicoActionPerformed
+
+    private void miMinimizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMinimizarActionPerformed
+        minimizarTodo();
+    }//GEN-LAST:event_miMinimizarActionPerformed
+
+    private void miRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miRestaurarActionPerformed
+        restaurarTodo();
+    }//GEN-LAST:event_miRestaurarActionPerformed
+
     private void miAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAcercaDeActionPerformed
         acercaDe();
     }//GEN-LAST:event_miAcercaDeActionPerformed
@@ -267,18 +379,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JDesktopPane jDesktopPane;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu mnArchivo;
     private javax.swing.JMenu mnAyuda;
     private javax.swing.JMenu mnCatalogos;
     private javax.swing.JMenu mnEdicion;
+    private javax.swing.JMenu mnVentana;
     private javax.swing.JMenuItem miAcercaDe;
+    private javax.swing.JMenuItem miCascada;
     private javax.swing.JMenuItem miClientes;
     private javax.swing.JMenuItem miLimpiar;
+    private javax.swing.JMenuItem miMosaico;
+    private javax.swing.JMenuItem miMinimizar;
     private javax.swing.JMenuItem miNuevaFactura;
     private javax.swing.JMenuItem miProductos;
+    private javax.swing.JMenuItem miRestaurar;
     private javax.swing.JMenuItem miSalir;
     private javax.swing.JMenuItem miVerFacturas;
     // End of variables declaration//GEN-END:variables

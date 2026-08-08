@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author josue zetino
  */
-public class FrmDetalleFactura extends javax.swing.JFrame {
+public class FrmDetalleFactura extends javax.swing.JInternalFrame {
 
     DefaultTableModel modeloTabla;
     Factura facturaActual;
@@ -22,7 +22,6 @@ public class FrmDetalleFactura extends javax.swing.JFrame {
         facturaActual = factura;
         configurarTabla();
         cargarFactura(factura);
-        setLocationRelativeTo(null);
     }
 
     private void configurarTabla() {
@@ -67,6 +66,10 @@ public class FrmDetalleFactura extends javax.swing.JFrame {
         btnImprimir = new javax.swing.JButton();
         btnCerrar = new javax.swing.JButton();
 
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Detalle de Factura");
 

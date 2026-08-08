@@ -19,11 +19,22 @@ public class FrmVistaPreviaFactura extends javax.swing.JDialog {
 
     private final TicketFactura ticket;
 
-    public FrmVistaPreviaFactura(java.awt.Frame padre, Factura factura) {
-        super(padre, "Vista Previa de Factura", true);
+    public FrmVistaPreviaFactura(java.awt.Component padre, Factura factura) {
+        super(obtenerFrame(padre), "Vista Previa de Factura", true);
         ticket = new TicketFactura(factura);
         initComponents();
-        setLocationRelativeTo(padre);
+        setLocationRelativeTo(obtenerFrame(padre));
+    }
+
+    private static java.awt.Frame obtenerFrame(java.awt.Component componente) {
+        if (componente instanceof java.awt.Frame) {
+            return (java.awt.Frame) componente;
+        }
+        java.awt.Window ventana = javax.swing.SwingUtilities.getWindowAncestor(componente);
+        if (ventana instanceof java.awt.Frame) {
+            return (java.awt.Frame) ventana;
+        }
+        return null;
     }
 
     private void imprimir() {
