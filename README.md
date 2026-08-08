@@ -9,6 +9,7 @@ Sistema de facturación de escritorio en **Java Swing** con patrón **MVC**.
 | 01 | Desarrollo del formulario de Facturación | [`tareas/01-desarrollo-formulario-facturacion/`](tareas/01-desarrollo-formulario-facturacion/) | PDF, PPTX, explicación |
 | 02 | Investigación: Formulario contenedor (Menú MDI) | [`tareas/02-investigacion-menu-mdi/`](tareas/02-investigacion-menu-mdi/) | investigación (fuente), PDF |
 | 03 | Integración del proyecto con Base de Datos | [`tareas/03-integracion-base-de-datos/`](tareas/03-integracion-base-de-datos/) | documento (fuente), PDF |
+| 04 | Publicación y control de versiones del proyecto | [`tareas/04-control-versiones/`](tareas/04-control-versiones/) | documento (fuente), PDF |
 
 > La lista se actualiza cada vez que se agrega una tarea. El código del proyecto vive siempre en [`sistema-ventas/`](sistema-ventas/) y evoluciona con cada tarea.
 

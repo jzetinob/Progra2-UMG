@@ -18,6 +18,7 @@
 | 7 — Pruebas y documentación | ⏳ En curso |
 | 8 — Formulario contenedor MDI | ✅ Completada |
 | 9 — Base de datos SQLite (JDBC) | ✅ Completada |
+| 10 — Publicación y control de versiones | ✅ Completada |
 
 Este archivo es el **historial de decisiones** (el "por qué" de cada cosa). La descripción técnica de cómo está implementado vive en [ARQUITECTURA.md](ARQUITECTURA.md).
 
@@ -133,3 +134,12 @@ Corresponde a la tarea "Integración del proyecto con Base de Datos" y reemplaza
 - **Controllers**: solo cambió 1 línea en cada uno (`...DAOCsv.getInstancia()` → `...DAOSQLite.getInstancia()`). Las vistas no se tocaron.
 - **Fix de singleton**: `MigradorDatos` recibe la conexión por parámetro (no puede llamar `getInstancia()` durante la construcción de `ConexionBD`, cuando la instancia aún no existe).
 - **Verificación automatizada**: se compiló con `javac` + el jar del driver y se probó: creación de BD/tablas, migración CSV, guardado de factura con detalles y persistencia al reabrir (segunda ejecución en nueva JVM).
+
+## Fase 10 — Publicación y control de versiones
+
+Corresponde a la tarea "Publicación y control de versiones del proyecto": no agrega funcionalidad, documenta el uso de Git/GitHub del semestre.
+
+- Un único repositorio público: `https://github.com/jzetinob/sistema-ventas` (rama `main`, 35 commits).
+- El repositorio contiene: código fuente completo, estructura Maven de NetBeans (`pom.xml`, `nbactions.xml`), README índice, `docs/` y los entregables de cada tarea en `tareas/NN-nombre/`.
+- `.gitignore` excluye `datos/` (base de datos local), `capturas/`, `target/` y `build/`.
+- Documento de la tarea: `tareas/04-control-versiones/control-versiones.md` (fuente del PDF de entrega).
