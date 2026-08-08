@@ -17,6 +17,7 @@
 | 6 — Validaciones | ✅ Completada |
 | 7 — Pruebas y documentación | ⏳ En curso |
 | 8 — Formulario contenedor MDI | ✅ Completada |
+| 9 — Base de datos SQLite (JDBC) | ✅ Completada |
 
 Este archivo es el **historial de decisiones** (el "por qué" de cada cosa). La descripción técnica de cómo está implementado vive en [ARQUITECTURA.md](ARQUITECTURA.md).
 
@@ -93,10 +94,13 @@ El objetivo era un formulario de facturación con menú principal (Archivo, Edic
 - Documentación final con explicación (asociación, agregación, composición, singleton, persistencia CSV, impresión).
 
 ## Notas para el futuro (SQLite)
-- Agregar dependencia `org.xerial:sqlite-jdbc` al `pom.xml`.
-- Crear `FacturaDAOSQLite` (y análogos para Producto/Cliente) que implementen las mismas interfaces.
-- Cambiar la instancia usada en los controllers (1 línea por controller).
-- El resto del código no se toca.
+
+> ✅ **Implementado en la Fase 9.** Se dejó escrita la nota original para documentar cómo se cumplió.
+
+- Agregar dependencia `org.xerial:sqlite-jdbc` al `pom.xml`. → ✅ `3.47.1.0`.
+- Crear `FacturaDAOSQLite` (y análogos para Producto/Cliente) que implementen las mismas interfaces. → ✅ ver Fase 9.
+- Cambiar la instancia usada en los controllers (1 línea por controller). → ✅.
+- El resto del código no se toca. → ✅ las vistas no cambiaron.
 
 ## Correcciones posteriores al plan
 - Se corrigió el orden de inicialización del singleton CSV (la instancia se creaba antes que las constantes de rutas, provocando NPE) y el correlativo de factura ahora se consume al pre-fill (evita números repetidos).
@@ -114,3 +118,18 @@ Corresponde a la tarea "Investigación: Formulario contenedor (Menú MDI)" y con
 - `FrmListaFacturas` recibe una referencia al `JDesktopPane` para abrir el detalle de factura como ventana interna del mismo escritorio.
 - `FrmVistaPreviaFactura` (diálogo modal) ahora acepta cualquier `Component` como padre y resuelve la ventana contenedora.
 - Se eliminaron los `main()` de los formularios hijos (las ventanas internas no se pueden mostrar fuera de un escritorio).
+
+## Fase 9 — Base de datos SQLite (JDBC)
+
+Corresponde a la tarea "Integración del proyecto con Base de Datos" y reemplaza el almacenamiento en CSV por una base de datos relacional:
+
+- **Dependencia**: `org.xerial:sqlite-jdbc:3.47.1.0` en el `pom.xml` (controlador JDBC de SQLite).
+- **`dao/ConexionBD.java`** (singleton): abre la conexión con `DriverManager.getConnection("jdbc:sqlite:datos/sistema_ventas.db")` y ejecuta `CREATE TABLE IF NOT EXISTS` para las 4 tablas.
+- **Esquema**: `clientes` (nit UNIQUE), `productos` (codigo UNIQUE), `facturas` (numero_factura UNIQUE) y `factura_detalles` (FK `factura_id` → `facturas(id)` con `ON DELETE CASCADE`).
+- **DAOs SQLite**: `ClienteDAOSQLite`, `ProductoDAOSQLite` y `FacturaDAOSQLite` implementan las interfaces `ClienteDAO`, `ProductoDAO` y `FacturaDAO` con `PreparedStatement` (evita inyección SQL). Usan `RETURN_GENERATED_KEYS` para el id autoincremental.
+- **Transacciones**: guardar/actualizar factura ejecuta factura + detalles dentro de una transacción (`setAutoCommit(false)` + `commit`/`rollback`). `eliminarConDetalles` borra la factura y el CASCADE elimina sus detalles.
+- **Correlativo**: `obtenerSiguienteNumeroFactura()` calcula `MAX` del número FAC-XXXX en la tabla (sin contador externo).
+- **`dao/MigradorDatos.java`**: si la BD está vacía y existen los CSV de las fases anteriores, importa los registros (una sola vez).
+- **Controllers**: solo cambió 1 línea en cada uno (`...DAOCsv.getInstancia()` → `...DAOSQLite.getInstancia()`). Las vistas no se tocaron.
+- **Fix de singleton**: `MigradorDatos` recibe la conexión por parámetro (no puede llamar `getInstancia()` durante la construcción de `ConexionBD`, cuando la instancia aún no existe).
+- **Verificación automatizada**: se compiló con `javac` + el jar del driver y se probó: creación de BD/tablas, migración CSV, guardado de factura con detalles y persistencia al reabrir (segunda ejecución en nueva JVM).

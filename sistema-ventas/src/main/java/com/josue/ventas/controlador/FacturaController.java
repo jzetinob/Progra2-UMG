@@ -5,7 +5,7 @@
 package com.josue.ventas.controlador;
 
 import com.josue.ventas.dao.FacturaDAO;
-import com.josue.ventas.dao.FacturaDAOCsv;
+import com.josue.ventas.dao.FacturaDAOSQLite;
 import com.josue.ventas.modelo.Factura;
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class FacturaController {
     FacturaDAO dao;
 
     public FacturaController() {
-        dao = FacturaDAOCsv.getInstancia();
+        dao = FacturaDAOSQLite.getInstancia();
     }
 
     public void Guardar(Factura factura) {

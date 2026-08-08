@@ -7,7 +7,7 @@ El proyecto se divide en 4 paquetes bajo `com.josue.ventas`:
 | Paquete | Responsabilidad | Clases |
 |---|---|---|
 | `modelo` | Datos de negocio (entidades) | `Factura` (+ clase anidada `FacturaDetalle`), `Producto`, `Cliente` |
-| `dao` | Acceso a datos (persistencia) | `FacturaDAO`, `FacturaDAOCsv`, `ProductoDAO`, `ProductoDAOCsv`, `ClienteDAO`, `ClienteDAOCsv`, `CsvUtil` |
+| `dao` | Acceso a datos (persistencia) | `ConexionBD`, `MigradorDatos`, `FacturaDAO`, `FacturaDAOSQLite`, `ProductoDAO`, `ProductoDAOSQLite`, `ClienteDAO`, `ClienteDAOSQLite` (quedan como referencia: `FacturaDAOCsv`, `ProductoDAOCsv`, `ClienteDAOCsv`, `CsvUtil`) |
 | `controlador` | Lógica entre vista y DAO | `FacturaController`, `ProductoController`, `ClienteController` |
 | `vista` | Interfaces gráficas (JFrames) | `FrmPrincipal`, `FrmFactura`, `FrmListaFacturas`, `FrmDetalleFactura`, `FrmProductos`, `FrmClientes`, `FrmVistaPreviaFactura`, `TicketFactura`, `CampoBusqueda` |
 
@@ -18,9 +18,9 @@ Vista (JFrame)
    │ 1. el usuario interactúa
    ▼
 Controlador  ──►  DAO (interfaz)
-                     │ 2. implementación actual: CSV (singleton)
+                     │ 2. implementación actual: SQLite con JDBC (singleton)
                      ▼
-                 Archivos en datos/
+                 Base de datos datos/sistema_ventas.db
 ```
 
 ## Relaciones entre objetos
@@ -48,40 +48,42 @@ Ambos pueden existir por separado: son "amigos" que se pasan mensajes. Es la rel
 La Factura expone los datos de sus detalles mediante `getDetallesFilas()` (devuelve `Object[][]`), así las otras capas no necesitan tocar la clase interna: encapsulamiento + composición.
 
 ### Patrón Singleton
-Cada DAO CSV expone una única instancia compartida con `getInstancia()` y constructor privado:
+Cada DAO expone una única instancia compartida con `getInstancia()` y constructor privado:
 
 ```java
-private static final FacturaDAOCsv instancia = new FacturaDAOCsv();
-private FacturaDAOCsv() { cargar(); }
-public static FacturaDAOCsv getInstancia() { return instancia; }
+private static final FacturaDAOSQLite instancia = new FacturaDAOSQLite();
+private FacturaDAOSQLite() { }
+public static FacturaDAOSQLite getInstancia() { return instancia; }
 ```
+
+`ConexionBD` también es singleton: abre una sola conexión JDBC al iniciar la aplicación y todos los DAOs la reutilizan (`ConexionBD.getInstancia().getConnection()`).
 
 Gracias a esto, todas las ventanas del programa ven los mismos datos (un `FrmFactura` guarda y `FrmListaFacturas` ve lo guardado).
 
-> Detalle importante: la constante `instancia` se declara DESPUÉS de las constantes de rutas de archivos. Si se declara antes, el constructor se ejecuta cuando las rutas aún son `null` (error de orden de inicialización estática que se corrigió más adelante en el historial).
+## Persistencia en SQLite (desde la Fase 9)
 
-## Persistencia en CSV
+La base de datos es un archivo `datos/sistema_ventas.db` (carpeta `datos/` creada automáticamente en el directorio de trabajo, ignorada por git). Esquema:
 
-Carpeta `datos/` (creada automáticamente en el directorio de trabajo, ignorada por git):
-
-| Archivo | Formato (separador `;`) | Ejemplo |
+| Tabla | Columnas | Restricciones |
 |---|---|---|
-| `facturas.csv` | `id;numero;nit;cliente;fecha;total` | `1;FAC-0001;123456789;Juan Perez;2026-08-01 16:29:07;22.5` |
-| `detalles.csv` | `idFactura;producto;cantidad;precio;subtotal` | `1;Manzana;3;2.5;7.5` |
-| `productos.csv` | `id;codigo;nombre;precio` | `1;P01;Manzana;2.5` |
-| `clientes.csv` | `id;nit;nombre;direccion;telefono` | `1;123456789;Juan Perez;Zona 1;5555-5555` |
-| `contador.txt` | próximo correlativo de factura | `2` |
+| `clientes` | id, nit, nombre, direccion, telefono | PK id autoincremental, UNIQUE nit |
+| `productos` | id, codigo, nombre, precio | PK id autoincremental, UNIQUE codigo |
+| `facturas` | id, numero_factura, nit, cliente, fecha, total | PK id autoincremental, UNIQUE numero_factura |
+| `factura_detalles` | id, factura_id, producto, cantidad, precio, subtotal | FK factura_id → facturas ON DELETE CASCADE |
 
 Mecánica:
-- Al arrancar, el DAO carga todos los archivos a memoria.
-- En cada guardar/eliminar/actualizar reescribe los archivos completos (datos pequeños, reescritura total = simplicidad).
-- `CsvUtil` escapa con comillas los campos que contienen `;`, comillas o saltos de línea, y parsea las líneas respetando las comillas.
+- `ConexionBD` carga el driver (`org.sqlite.JDBC`), abre la conexión y ejecuta `CREATE TABLE IF NOT EXISTS` al arrancar.
+- `MigradorDatos` importa los CSV de las fases anteriores a la BD (una sola vez, si la BD está vacía).
+- Los DAOs SQLite usan `PreparedStatement` (protege contra inyección SQL) y `RETURN_GENERATED_KEYS` para recuperar el id generado.
+- Guardar/actualizar factura corre en una **transacción**: factura + detalles se insertan juntos, con `commit`/`rollback`.
+
+> **Histórico (reemplazado):** en las fases 1-8 la persistencia era en CSV (`facturas.csv`, `detalles.csv`, `productos.csv`, `clientes.csv`, `contador.txt`). Los DAO CSV quedan en el código como referencia y fueron la base de las mismas interfaces DAO.
 
 ## Número de factura automático
 
-- `FacturaDAO.obtenerSiguienteNumeroFactura()` devuelve el siguiente correlativo (`FAC-%04d`) y **lo consume** (incrementa el contador), para que dos facturas abiertas no repitan número.
+- `FacturaDAO.obtenerSiguienteNumeroFactura()` devuelve el siguiente correlativo (`FAC-%04d`) consultando el máximo FAC-XXXX en la tabla `facturas` (sin contador externo).
 - `FrmFactura` lo muestra en un campo solo lectura y lo renueva al limpiar el formulario.
-- El contador se persiste en `contador.txt`, así el número no se repite ni después de reiniciar (ni si se elimina la última factura).
+- Como el número se calcula de los registros reales, no se repite después de reiniciar ni si se elimina la última factura.
 
 ## Impresión
 
@@ -109,10 +111,10 @@ Las ventanas secundarias se abren centradas respecto a la principal y se reutili
 - Al elegir un cliente, se autollenan NIT y nombre; al elegir un producto, se autollena el precio.
 - Se usa en `FrmFactura` para cliente y producto; funciona aunque el catálogo sea grande.
 
-## Futuro: SQLite
+## Cómo se implementó SQLite
 
-Las interfaces (`FacturaDAO`, `ProductoDAO`, `ClienteDAO`) permiten cambiar la persistencia sin tocar vistas ni controladores:
+Las interfaces (`FacturaDAO`, `ProductoDAO`, `ClienteDAO`) permitieron cambiar la persistencia sin tocar vistas ni controladores:
 
-1. Agregar `org.xerial:sqlite-jdbc` al `pom.xml`.
-2. Crear `FacturaDAOSQLite` (y análogos) que implementen las mismas interfaces.
-3. Cambiar la línea `dao = ...getInstancia()` en cada controller.
+1. Se agregó `org.xerial:sqlite-jdbc` al `pom.xml`.
+2. Se crearon `FacturaDAOSQLite`, `ProductoDAOSQLite` y `ClienteDAOSQLite` implementando las mismas interfaces.
+3. Se cambió la línea `dao = ...getInstancia()` en cada controller.

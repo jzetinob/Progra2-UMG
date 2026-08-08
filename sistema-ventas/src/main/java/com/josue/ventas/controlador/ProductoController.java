@@ -5,7 +5,7 @@
 package com.josue.ventas.controlador;
 
 import com.josue.ventas.dao.ProductoDAO;
-import com.josue.ventas.dao.ProductoDAOCsv;
+import com.josue.ventas.dao.ProductoDAOSQLite;
 import com.josue.ventas.modelo.Producto;
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class ProductoController {
     ProductoDAO dao;
 
     public ProductoController() {
-        dao = ProductoDAOCsv.getInstancia();
+        dao = ProductoDAOSQLite.getInstancia();
     }
 
     public void Guardar(Producto producto) {

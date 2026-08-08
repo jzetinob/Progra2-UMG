@@ -5,7 +5,7 @@
 package com.josue.ventas.controlador;
 
 import com.josue.ventas.dao.ClienteDAO;
-import com.josue.ventas.dao.ClienteDAOCsv;
+import com.josue.ventas.dao.ClienteDAOSQLite;
 import com.josue.ventas.modelo.Cliente;
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class ClienteController {
     ClienteDAO dao;
 
     public ClienteController() {
-        dao = ClienteDAOCsv.getInstancia();
+        dao = ClienteDAOSQLite.getInstancia();
     }
 
     public void Guardar(Cliente cliente) {
