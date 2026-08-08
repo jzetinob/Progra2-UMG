@@ -16,6 +16,7 @@
 | 5 — Impresión con vista previa | ✅ Completada |
 | 6 — Validaciones | ✅ Completada |
 | 7 — Pruebas y documentación | ⏳ En curso |
+| 8 — Formulario contenedor MDI | ✅ Completada |
 
 Este archivo es el **historial de decisiones** (el "por qué" de cada cosa). La descripción técnica de cómo está implementado vive en [ARQUITECTURA.md](ARQUITECTURA.md).
 
@@ -105,3 +106,11 @@ El objetivo era un formulario de facturación con menú principal (Archivo, Edic
 - **Detalles del formulario**: precio y subtotal se muestran con formato de 2 decimales en la tabla; el total se toma de `facturaActual.getTotal()` (modelo) en lugar de parsear el label de la UI.
 - **Errores de I/O visibles**: los `catch` vacíos de `FacturaDAOCsv` ahora registran las fallas con `java.util.logging.Logger`.
 - **Compilación**: `maven.compiler.release` bajó de 26 a 25 para coincidir con el JDK instalado.
+
+## Fase 8 — Formulario contenedor (MDI)
+Corresponde a la tarea "Investigación: Formulario contenedor (Menú MDI)" y convierte la aplicación a la arquitectura MDI:
+- `FrmPrincipal` es ahora el **contenedor MDI**: su contenido es un `JDesktopPane` y el `JMenuBar` incluye el menú **Ventana** (Cascada, Mosaico, Minimizar todo, Restaurar todo).
+- Todos los formularios (`FrmFactura`, `FrmProductos`, `FrmClientes`, `FrmListaFacturas`, `FrmDetalleFactura`) pasaron de `JFrame` a **`JInternalFrame`** (ventanas internas movibles, minimizables, maximizables, redimensionables y cerrables dentro del escritorio).
+- `FrmListaFacturas` recibe una referencia al `JDesktopPane` para abrir el detalle de factura como ventana interna del mismo escritorio.
+- `FrmVistaPreviaFactura` (diálogo modal) ahora acepta cualquier `Component` como padre y resuelve la ventana contenedora.
+- Se eliminaron los `main()` de los formularios hijos (las ventanas internas no se pueden mostrar fuera de un escritorio).

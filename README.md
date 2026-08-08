@@ -13,7 +13,7 @@ Sistema de facturación de escritorio en **Java Swing** con patrón **MVC**.
 
 ## ¿Qué hace?
 
-- **Ventana principal** con menú clásico: Archivo, Catálogos, Edición y Ayuda (en español).
+- **Ventana principal** con menú clásico: Archivo, Catálogos, Edición, Ventana y Ayuda (en español). Es un **formulario contenedor MDI**: mantiene un `JDesktopPane` donde se abren los formularios como `JInternalFrame` (ventanas internas con cascada y mosaico desde el menú Ventana).
 - **Facturación**: cliente, NIT, fecha automática, número de factura automático (FAC-0001, FAC-0002, ...), tabla de productos con subtotales y total, botones Agregar / Eliminar / Guardar / Imprimir.
 - **Catálogos**: CRUD completo de productos (código, nombre, precio) y clientes (NIT, nombre, dirección, teléfono), integrados con la factura mediante un **buscador con autocompletado** (filtra por código/NIT o nombre mientras escribes, sin depender del tamaño del catálogo).
 - **Persistencia**: los datos se guardan en archivos CSV dentro de la carpeta `datos/` (no se pierden al cerrar el programa).
@@ -67,6 +67,7 @@ Documentación detallada en [`docs/`](docs/).
 | — | Fix: inicialización del singleton y correlativo |
 | — | Buscador con autocompletado en la factura |
 | — | Mejoras: correlativo sin quemar, formato de precios, logging del DAO |
+| — | MDI: formulario contenedor con JDesktopPane y JInternalFrame |
 
 ## Documentación
 
